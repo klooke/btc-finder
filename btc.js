@@ -1,35 +1,33 @@
-﻿var CoinKey = require('coinkey')
+﻿const CoinKey = require("coinkey");
 
 const min = 0x2126875fd00000000
 const max = 0x3ffffffffffffffff
+const wallet = "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so";
 
-const wallets = ['13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so']
+function searchWallet({ min: minKey, max: maxKey }, wallet) {
+	let _curKey = minKey;
 
-let key = BigInt(min)
+	while (true) {
+		_curKey += BigInt(1);
 
-console.log(key)
+		let _privKey = _curKey.toString(16).padStart(64, "0");
+		let _pubKey = generatePublic(_privKey);
 
-while(true){
+		console.log(_privKey, _pubKey);
 
-    key = key + BigInt(parseInt(1))
-    pkey = key.toString(16)
-    while (pkey.length < 64){
-        pkey = '0' + pkey
-    }
 
-    public = generatePublic(pkey)
-    console.log(pkey)
-    console.log(public)
-    for (i=0;i<wallets.length;i++){
-        if (public == wallets[i]){
-            throw 'ACHEI!!!! 🎉🎉🎉🎉🎉'
-        }
-    }
+		if (_pubKey == wallet) {
+			console.log("ACHEI!!!! 🎉🎉🎉🎉🎉");
+			return; // Encerra o programa.
+		}
+	}
+}
+
+function generatePublic(privateKey) {
+	let _key = new CoinKey(Buffer.from(privateKey, "hex"));
+	_key.compressed = true;
+	return _key.publicAddress;
 }
 
 
-function generatePublic(privateKey){
-    _key = new CoinKey(new Buffer(privateKey, 'hex'))
-    _key.compressed = true
-    return _key.publicAddress
-}
+module.exports = searchWallet({min, max}, wallet);
