@@ -23,8 +23,24 @@ function searchWallet({ min: minKey, max: maxKey }, wallet) {
 	}
 }
 
+function toBuffer(key) {
+	if (typeof key !== "bigint") key = BigInt(key);
+
+	key = key.toString(16).padStart(64, "0");
+
+	let idx = 0;
+	const bytes = [];
+	for (let i = 0; i < key.length; i += 2) {
+		bytes[idx++] = parseInt(key.substring(i, i + 2), 16);
+	}
+
+	return Buffer.from(bytes);
+}
+
 function generatePublic(privateKey) {
-	let _key = new CoinKey(Buffer.from(privateKey, "hex"));
+	const buffeKey = toBuffer(privateKey);
+	
+	let _key = new CoinKey(buffeKey);
 	_key.compressed = true;
 	return _key.publicAddress;
 }
