@@ -3,5 +3,6 @@
     "range": {
         "from": "0x20000000000000000",
         "to": "0x3ffffffffffffffff",
+        "type": "random+sequential"
     }
 }
