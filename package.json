@@ -1,13 +1,14 @@
 {
-  "name": "btc",
+  "name": "btc-finder",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Generate random keys within the puzzle key space and scan it until find the wallet with balance.",
+  "main": "./btc-finder.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "klooke",
+  "license": "MIT",
+  "type": "module",
   "dependencies": {
     "coinkey": "^3.0.0"
   }
