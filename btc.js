@@ -1,13 +1,11 @@
 ﻿const CoinKey = require("coinkey");
-const Cache = require("./btc-cache");
 
+const min = 0x2126875fd00000000
+const max = 0x3ffffffffffffffff
 const wallet = "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so";
-const cache = new Cache();
-const switchTimer = 180 * 1000; // milesegundos.
 
-async function searchWallet({ min: minKey, max: maxKey }, wallet) {
+function searchWallet({ min: minKey, max: maxKey }, wallet) {
 	let _curKey = minKey;
-	let _timer = 0; // milesegundos.
 
 	while (true) {
 		_curKey += BigInt(1);
@@ -17,29 +15,12 @@ async function searchWallet({ min: minKey, max: maxKey }, wallet) {
 
 		console.log(_privKey, _pubKey);
 
-		if (_curKey > maxKey || _timer > switchTimer) break; // Entra no modo recursivo.
 
 		if (_pubKey == wallet) {
-			await cache.makeBackup(_curKey, maxKey); // salva o backup
-
 			console.log("ACHEI!!!! 🎉🎉🎉🎉🎉");
-
-			await Cache.saveData("./wallet-found.txt", {
-				wallet: wallet,
-				public: _pubKey,
-				private: _privKey,
-			});
-
 			return; // Encerra o programa.
 		}
-
-		_timer++;
 	}
-
-	await cache.makeBackup(_curKey, maxKey); // salva o backup
-
-	// Modo recursivo, carrega outra range no arquivo cache.
-	searchWallet(cache.getRandomRange(), wallet);
 }
 
 function generatePublic(privateKey) {
@@ -49,4 +30,4 @@ function generatePublic(privateKey) {
 }
 
 
-module.exports = searchWallet(cache.getRandomRange(), wallet);
+module.exports = searchWallet({min, max}, wallet);
