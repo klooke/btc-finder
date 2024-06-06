@@ -1,13 +1,17 @@
-//var searchEngine = require("./src/SearchEngine");
 import { readFileSync } from "fs";
 import SearchEngine from "./src/SearchEngine.js";
 import * as RangeKeys from "./src/range-keys/RangeKeys.js";
 
-function main() {
-	const config = loadConfig();
-	const search = new SearchEngine();
+async function main() {
+	const { wallet, range, type } = loadConfig();
 
-	search.searchWallet(config.wallet, new RangeKeys[config.type](config.range));
+	const search = new SearchEngine();
+	const rangeKeys = new RangeKeys[type](range);
+
+	if (await search.searchWallet(wallet, rangeKeys)) {
+		const data = search.result();
+		console.log(`\n Carteira encontrada!!! -> ${data.publicAddress}`);
+	}
 }
 
 function loadConfig() {
