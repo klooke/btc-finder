@@ -9,7 +9,7 @@ export default class RangeKeysRandomSequential extends RangeKeysBase {
 
 	next() {
 		if (
-			this.countKeys > 1000000 ||
+			this.countKeys > this._rangeKeyMax ||
 			this.countKeys < 0 ||
 			this.current > this.to
 		) {

@@ -6,7 +6,6 @@ export default class SearchEngine {
 	#data = {
 		lastKey: "",
 		genWallet: "",
-		averageKeys: 0,
 
 		set(keyBuffer, genWallet) {
 			this.lastKey = keyBuffer.toString("hex");
@@ -31,14 +30,11 @@ export default class SearchEngine {
 		this.#counterKeys++;
 
 		if (performance.now() - this.#timer > 1000) {
-			this.#data.averageKeys = this.#counterKeys;
+			console.clear();
+			console.log(this.toString(), `(${this.#counterKeys} keys\\s)`);
 
 			this.#counterKeys = 0;
 			this.#timer = performance.now();
-
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(this.toString());
 		}
 	}
 
@@ -49,7 +45,6 @@ export default class SearchEngine {
 			const genWallet = this.#generateWallet(key);
 
 			this.#data.set(key, genWallet);
-
 
 			if (this.#equals(wallet, genWallet)) return true;
 
@@ -67,8 +62,6 @@ export default class SearchEngine {
 	}
 
 	toString() {
-		return `${this.#data.lastKey} -> ${this.#data.genWallet} (${
-			this.#data.averageKeys
-		} keys\\s)`;
+		return `${this.#data.lastKey} -> ${this.#data.genWallet}`;
 	}
 }
