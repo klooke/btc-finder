@@ -6,34 +6,49 @@ export default class RangeKeysBase {
 		this.current = this.from;
 	}
 
-	static bigIntToBuffer(key) {
-		if (typeof key !== "bigint") key = BigInt(key);
+	_rangeKeyMax = 100_000_000;
 
-		key = key.toString(16).padStart(64, "0");
-
-		let idx = 0;
-		const bytes = [];
-		for (let i = 0; i < key.length; i += 2) {
-			bytes[idx++] = parseInt(key.substring(i, i + 2), 16);
-		}
-
+	static bigIntToBuffer(value) {
+		const bytes = RangeKeysBase.bigIntToUint8Array(value, 64);
 		return Buffer.from(bytes);
 	}
 
-	getRandomKey() {
-		const min = RangeKeysBase.bigIntToBuffer(this.from);
-		const max = RangeKeysBase.bigIntToBuffer(this.to);
+	static bigIntToUint8Array(value, length = 0) {
+		if (typeof value !== "bigint") value = BigInt(value);
 
-		const key =
-			"0x" +
-			Array(min.length)
-				.fill()
-				.map((_, i) => {
-					return Math.floor(Math.random() * (max[i] - min[i] + 1) + min[i])
-						.toString(16)
-						.padStart(2, "0");
-				})
-				.join("");
+		value = value.toString(16);
+
+		if (!length) length = value.length % 2 ? value.length + 1 : value.length;
+
+		value = value.padStart(length, "0");
+
+		let idx = 0;
+		const bytes = new Uint8Array(length / 2);
+		for (let i = 0; i < length; i += 2) {
+			bytes[idx++] = parseInt(value.substring(i, i + 2), 16);
+		}
+
+		return bytes;
+	}
+
+	getRandomByte(min, max) {
+		let value = crypto.getRandomValues(new Uint8Array(1))[0] % max;
+
+		if (!value) value = max;
+		if (value < min) value = min;
+
+		return value;
+	}
+
+	getRandomKey() {
+		const minHeader = RangeKeysBase.bigIntToUint8Array(this.from);
+		const maxHeader = RangeKeysBase.bigIntToUint8Array(this.to);
+
+		let key = "0x";
+		for (let i = 0; i < minHeader.length; i++) {
+			const byte = this.getRandomByte(minHeader[i], maxHeader[i]);
+			key += byte.toString(16).padStart(2, "0");
+		}
 
 		return BigInt(key);
 	}
