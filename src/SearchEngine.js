@@ -2,38 +2,38 @@ import CoinKey from "coinkey";
 
 export default class SearchEngine {
 	#timer = 0;
-	#counterKeys = 0;
+	#countKeys = 0;
 	#data = {
-		lastKey: "",
-		genWallet: "",
+		lastPrivKey: "",
+		lastPubKey: "",
 
-		set(keyBuffer, genWallet) {
-			this.lastKey = keyBuffer.toString("hex");
-			this.genWallet = genWallet;
+		set(keyBuffer, publicAddress) {
+			this.lastPrivKey = keyBuffer.toString("hex");
+			this.lastPubKey = publicAddress;
 		},
 	};
 
-	#equals(wallet, genWallet) {
-		if (wallet === "" || typeof wallet !== "string") return false;
-		else if (genWallet === "" || typeof genWallet !== "string") return false;
-		return wallet === genWallet;
+	#equals(stringA, stringB) {
+		if (typeof stringA !== "string") JSON.stringify(stringA);
+		if (typeof stringB !== "string") JSON.stringify(stringB);
+		return stringA === stringB;
 	}
 
 	#generateWallet(privateKey) {
-		const _key = new CoinKey(privateKey);
-		_key.compressed = true;
-		return _key.publicAddress;
+		const wallet = new CoinKey(privateKey);
+		wallet.compressed = true;
+		return wallet;
 	}
 
 	// Every 1000 ms, mark how many keys were covered!
 	#perfomanceCount() {
-		this.#counterKeys++;
+		this.#countKeys++;
 
 		if (performance.now() - this.#timer > 1000) {
 			console.clear();
-			console.log(this.toString(), `(${this.#counterKeys} keys\\s)`);
+			console.log(this.toString(), `(${this.#countKeys} keys\\s)`);
 
-			this.#counterKeys = 0;
+			this.#countKeys = 0;
 			this.#timer = performance.now();
 		}
 	}
@@ -41,12 +41,12 @@ export default class SearchEngine {
 	async searchWallet(wallet, range) {
 		this.#timer = performance.now();
 
-		for (const key of range) {
-			const genWallet = this.#generateWallet(key);
+		for (const privateKey of range) {
+			const { publicAddress } = this.#generateWallet(privateKey);
 
-			this.#data.set(key, genWallet);
+			this.#data.set(privateKey, publicAddress);
 
-			if (this.#equals(wallet, genWallet)) return true;
+			if (this.#equals(wallet, publicAddress)) return true;
 
 			this.#perfomanceCount();
 		}
@@ -56,12 +56,12 @@ export default class SearchEngine {
 
 	result() {
 		return {
-			privateKey: this.#data.lastKey,
-			publicAddress: this.#data.genWallet,
+			privateKey: this.#data.lastPrivKey,
+			publicAddress: this.#data.lastPubKey,
 		};
 	}
 
 	toString() {
-		return `${this.#data.lastKey} -> ${this.#data.genWallet}`;
+		return `${this.#data.lastPrivKey} -> ${this.#data.lastPubKey}`;
 	}
 }
