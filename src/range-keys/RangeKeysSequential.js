@@ -1,3 +1,4 @@
+import { bigIntToBuffer } from "../Utils.js";
 import RangeKeysBase from "./RangeKeysBase.js";
 
 export default class RangeKeysSequential extends RangeKeysBase {
@@ -6,12 +7,11 @@ export default class RangeKeysSequential extends RangeKeysBase {
 	}
 
 	next() {
-		if (this.current < this.to)
-			return {
-				value: RangeKeysBase.bigIntToBuffer(this.current++),
-				done: false,
-			};
+		if (this.current > this.to) return { done: true };
 
-		return { done: true };
+		return {
+			value: bigIntToBuffer(this.current++),
+			done: false,
+		};
 	}
 }
