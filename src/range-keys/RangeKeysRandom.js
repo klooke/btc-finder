@@ -1,4 +1,4 @@
-import { bigIntToBuffer, getRandomKey } from "../Utils.js";
+import { bigIntToBuffer, getRandomBigInt } from "../Utils.js";
 import RangeKeysBase from "./RangeKeysBase.js";
 
 export default class RangeKeysRandom extends RangeKeysBase {
@@ -7,7 +7,7 @@ export default class RangeKeysRandom extends RangeKeysBase {
 	}
 
 	next() {
-		this.current = getRandomKey(this.from, this.to);
+		this.current = getRandomBigInt(this.from, this.to);
 
 		return { value: bigIntToBuffer(this.current), done: false };
 	}

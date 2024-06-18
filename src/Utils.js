@@ -5,8 +5,6 @@ export function bigIntToBuffer(value) {
 }
 
 export function bigIntToUint8Array(value, length = 0) {
-	if (typeof value !== "bigint") value = BigInt(value);
-
 	value = value.toString(16);
 
 	if (!length) length = value.length % 2 ? value.length + 1 : value.length;
@@ -23,24 +21,34 @@ export function bigIntToUint8Array(value, length = 0) {
 }
 
 //Randoms
-export function getRandomByte(min, max) {
-	let value = crypto.getRandomValues(new Uint8Array(1))[0] % max;
+export function getRandomByte(min = 0x00, max = 0xff) {
+	const range = max - min;
 
-	if (!value) value = max;
-	if (value < min) value = min;
+	const randomByte = new Uint8Array(1);
 
-	return value;
+	crypto.getRandomValues(randomByte);
+
+	randomByte[0] %= range;
+
+	return min + randomByte[0];
 }
 
-export function getRandomKey(min, max) {
-	const minHeader = bigIntToUint8Array(min);
-	const maxHeader = bigIntToUint8Array(max);
+export function getRandomBigInt(min, max) {
+	const range = max - min;
 
-	let key = "0x";
-	for (let i = 0; i < minHeader.length; i++) {
-		const byte = getRandomByte(minHeader[i], maxHeader[i]);
-		key += byte.toString(16).padStart(2, "0");
+	const rangeBytes = bigIntToUint8Array(range);
+	const randomBytes = new Uint8Array(rangeBytes.length);
+
+	crypto.getRandomValues(randomBytes);
+
+	let randomBigInt = 0n;
+
+	for (let i = 0; i < randomBytes.length; i++) {
+		randomBigInt <<= 8n;
+		randomBigInt += BigInt(randomBytes[i]);
 	}
 
-	return BigInt(key);
+	randomBigInt %= range;
+
+	return min + randomBigInt;
 }
