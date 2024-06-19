@@ -1,4 +1,5 @@
 import { bigIntToBuffer, getRandomBigInt } from "../Utils.js";
+import { getRandomBigInt } from "../utils/randoms.js";
 import RangeKeysBase from "./RangeKeysBase.js";
 
 export default class RangeKeysRandomSequential extends RangeKeysBase {
