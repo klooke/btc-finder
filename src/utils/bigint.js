@@ -1,9 +1,4 @@
 // BigInt
-export function bigIntToBuffer(value) {
-	const bytes = bigIntToUint8Array(value, 64);
-	return Buffer.from(bytes);
-}
-
 export function bigIntToUint8Array(value, length = 0) {
 	value = value.toString(16);
 
@@ -18,4 +13,9 @@ export function bigIntToUint8Array(value, length = 0) {
 	}
 
 	return bytes;
+}
+
+export function bigIntToBuffer(value) {
+	const bytes = bigIntToUint8Array(value, 64);
+	return Buffer.from(bytes);
 }

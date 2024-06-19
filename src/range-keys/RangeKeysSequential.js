@@ -1,4 +1,4 @@
-import { bigIntToBuffer } from "../Utils.js";
+import { bigIntToBuffer } from "../utils/bigint.js";
 import RangeKeysBase from "./RangeKeysBase.js";
 
 export default class RangeKeysSequential extends RangeKeysBase {

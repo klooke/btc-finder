@@ -1,4 +1,4 @@
-import { bigIntToBuffer, getRandomBigInt } from "../Utils.js";
+import { bigIntToBuffer } from "../utils/bigint.js";
 import { getRandomBigInt } from "../utils/randoms.js";
 import RangeKeysBase from "./RangeKeysBase.js";
 
