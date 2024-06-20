@@ -1,11 +1,6 @@
-import WorkerManager from "./WorkerManager.js";
+import WorkerManager from "./worker-manager.js";
 
 export default class SearchEngine extends WorkerManager {
-	constructor(numThreads = 1) {
-		if (typeof numThreads !== "number" || numThreads <= 0) numThreads = 1;
-		super("./src/search-engine/SearchEngineWorker.js", numThreads);
-	}
-
 	#timer = 0;
 	#countKeys = 0;
 	#data = {
@@ -19,6 +14,11 @@ export default class SearchEngine extends WorkerManager {
 	};
 	#resolve = [];
 	#found = false;
+
+	constructor(numThreads = 1) {
+		if (typeof numThreads !== "number" || numThreads <= 0) numThreads = 1;
+		super("./src/search-engine/worker.js", numThreads);
+	}
 
 	// Every 1000 ms, mark how many keys were covered!
 	#perfomanceCount() {

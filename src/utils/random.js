@@ -1,3 +1,5 @@
+import { bigIntToUint8Array } from "./index.js";
+
 export function getRandomByte(min = 0x00, max = 0xff) {
 	const range = max - min;
 

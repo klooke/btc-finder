@@ -1,8 +1,6 @@
-
-import SearchEngine from "./src/search-engine/SearchEngine.js";
-import RangeKeys from "./src/range-keys/RangeKeys.js";
-import { loadData, saveData } from "./src/utils/file.js";
-
+import SearchEngine from "../search-engine/index.js";
+import RangeKeys from "../range-keys/index.js";
+import { loadData, saveData } from "../utils/index.js";
 async function main() {
 	const { wallet, range, type } = loadData("./config.json");
 

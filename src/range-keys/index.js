@@ -1,6 +1,6 @@
-import RangeKeysRandom from "./RangeKeysRandom.js";
-import RangeKeysSequential from "./RangeKeysSequential.js";
-import RangeKeysRandomSequential from "./RangeKeysRandomSequential.js";
+import RangeKeysRandom from "./random.js";
+import RangeKeysSequential from "./sequential.js";
+import RangeKeysRandomSequential from "./random-sequential.js";
 
 export default class RangeKeys {
 	constructor(type, range) {
@@ -9,6 +9,7 @@ export default class RangeKeys {
 				return new RangeKeysRandom(range);
 			case "random_sequential":
 				return new RangeKeysRandomSequential(range);
+			case "sequential":
 			default:
 				return new RangeKeysSequential(range);
 		}

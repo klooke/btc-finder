@@ -1,11 +1,9 @@
-import { bigIntToBuffer } from "../utils/bigint.js";
-import RangeKeysBase from "./RangeKeysBase.js";
-
+import { bigIntToBuffer } from "../utils/index.js";
+import RangeKeysBase from "./base.js";
 export default class RangeKeysSequential extends RangeKeysBase {
 	constructor(range) {
 		super(range);
 	}
-
 	next() {
 		if (this.current > this.to) return { done: true };
 
