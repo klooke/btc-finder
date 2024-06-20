@@ -10,4 +10,10 @@ export default class RangeKeysBase {
 
 	// Iterator
 	[Symbol.iterator] = () => this;
+
+	progress() {
+		return {
+			current: "0x" + this.current.toString(16),
+		};
+	}
 }

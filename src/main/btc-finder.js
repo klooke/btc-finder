@@ -1,6 +1,9 @@
 import SearchEngine from "../search-engine/index.js";
 import RangeKeys from "../range-keys/index.js";
 import { loadData, saveData } from "../utils/index.js";
+
+process.on("SIGINT", () => process.exit(1));
+
 async function main() {
 	const { wallet, range, type } = loadData("./config.json");
 
